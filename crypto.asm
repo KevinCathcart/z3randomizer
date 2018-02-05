@@ -25,8 +25,8 @@ macro LSR32(value,k)
 	LDX.w <k>
 	
 	?loop:
-	LDA <value>+2
-	LSR : STA <value>+2 ; do top part
+	LDA <value>+$000002
+	LSR : STA <value>+$000002 ; do top part
 	PHP ; push carry
 	LDA <value>
 	LSR ; do bottom part
@@ -47,11 +47,11 @@ macro ASL32(value,k)
 	LDA <value>
 	LSR : STA <value> ; do bottom part
 	PHP ; push carry
-	LDA <value>+2
+	LDA <value>+$000002
 	LSR
 	PLP ; pull carry
 	ADC.w #$0000
-	STA <value>+2 ; do top part
+	STA <value>+$000002 ; do top part
 	
 	DEX
 	CPX.w #$0000 : BNE ?loop
@@ -60,49 +60,49 @@ endmacro
 CryptoMX:
 	PHX
 	LDA !z : STA !dpScratch
-	LDA !z+2 : STA !dpScratch+2
+	LDA !z+$000002 : STA.l !dpScratch+$000002
 	%LSR32(!dpScratch,#$05)
 	
-	LDA !y : STA !dpScratch+4
-	LDA !y+2 : STA !dpScratch+6
-	%ASL32(!dpScratch+4,#$02)
+	LDA !y : STA.l !dpScratch+$000004
+	LDA !y+$000002 : STA.l !dpScratch+$000006
+	%ASL32(!dpScratch+$000004,#$02)
 	
-	LDA !dpScratch : EOR !dpScratch+4 : STA !upperScratch
-	LDA !dpScratch+2 : EOR !dpScratch+6 : STA !upperScratch+2
+	LDA !dpScratch : EOR !dpScratch+$000004 : STA !upperScratch
+	LDA.l !dpScratch+$000002 : EOR !dpScratch+$000006 : STA.l !upperScratch+$000002
 	
 	;================================
 	
 	LDA !z : STA !dpScratch
-	LDA !z+2 : STA !dpScratch+2
+	LDA !z+$000002 : STA !dpScratch+$000002
 	%ASL32(!dpScratch,#$04)
 	
-	LDA !y : STA !dpScratch+4
-	LDA !y+2 : STA !dpScratch+6
+	LDA !y : STA !dpScratch+$000004
+	LDA !y+$000002 : STA !dpScratch+$000006
 	%LSR32(!dpScratch,#$03)
 	
-	LDA !dpScratch : EOR !dpScratch+4 : STA !upperScratch+4
-	LDA !dpScratch+2 : EOR !dpScratch+6 : STA !upperScratch+6
+	LDA !dpScratch : EOR !dpScratch+$000004 : STA !upperScratch+$000004
+	LDA !dpScratch+$000002 : EOR !dpScratch+$000006 : STA !upperScratch+$000006
 	
 	;================================
 	
-	LDA !upperScratch : !ADD !upperScratch+4 : STA !upperScratch
-	LDA !upperScratch+2 : ADC !upperScratch+6 : STA !upperScratch+2
+	LDA !upperScratch : !ADD !upperScratch+$000004 : STA !upperScratch
+	LDA !upperScratch+$000002 : ADC !upperScratch+$000006 : STA !upperScratch+$000002
 	
 	;================================
 	
 	LDA !sum : EOR !y : STA !dpScratch
-	LDA !sum+2 : EOR !y+2 : STA !dpScratch+2
+	LDA !sum+$000002 : EOR !y+$000002 : STA !dpScratch+$000002
 	
 	;================================
 	
 	LDA !p : AND.w #$0003 : EOR !e : ASL #2 : TAX ; put (p&3)^e into X
-	LDA !keyBase, X : EOR !z : STA !upperScratch+4
-	LDA !keyBase+2, X : EOR !z+2 : STA !upperScratch+6
+	LDA !keyBase, X : EOR !z : STA !upperScratch+$000004
+	LDA !keyBase+$000002, X : EOR !z+$000002 : STA !upperScratch+$000006
 	
 	;================================
 	
-	LDA !upperScratch : EOR !upperScratch+4 : STA !MXResult
-	LDA !upperScratch+2 : EOR !upperScratch+6 : STA !MXResult+2
+	LDA !upperScratch : EOR !upperScratch+$000004 : STA !MXResult
+	LDA !upperScratch+$000002 : EOR !upperScratch+$000006 : STA !MXResult+$000002
 	PLX
 RTS
 
@@ -128,9 +128,9 @@ XXTEA_Decode:
 		
 		; sum = rounds*DELTA;
 		LDA CryptoDelta : STA !dpScratch
-		LDA CryptoDelta+1 : STA !dpScratch+1
-		LDA CryptoDelta+2 : STA !dpScratch+2
-		LDA CryptoDelta+3 : STA !dpScratch+3
+		LDA CryptoDelta+$000001 : STA !dpScratch+$000001
+		LDA CryptoDelta+$000002 : STA !dpScratch+$000002
+		LDA CryptoDelta+$000003 : STA !dpScratch+$000003
 		JSR .multiply
 		LDA !dpScratch
 		STA !sum
@@ -138,7 +138,7 @@ XXTEA_Decode:
 		; y = v[0];
 		REP #$20 ; set 16-bit accumulator
 		LDA !v : STA !y
-		LDA !v+2 : STA !y+2
+		LDA !v+$000002 : STA !y+$000002
 		---
 			LDA !sum : LSR #2 : AND #$03 : STA !e ; e = (sum >> 2) & 3;
 			
@@ -147,29 +147,29 @@ XXTEA_Decode:
 				; z = v[p-1];
 				DEC : ASL #2 : TAX
 				LDA !v, X : STA !z
-				LDA !v+2, X : STA !z+2
+				LDA !v+$000002, X : STA !z+$000002
 				
 				; y = v[p] -= MX;
 				JSR CryptoMX
 				LDA !p : ASL #2 : TAX
 				LDA !v, X : !SUB !MXResult : STA !v, X : STA !y
-				LDA !v+2, X : SBC !MXResult+2 : STA !v+2, X : STA !y+2
+				LDA !v+$000002, X : SBC !MXResult+$000002 : STA !v+$000002, X : STA !y+$000002
 				
 			LDA !p : DEC : STA !p : BNE -- ; }
 			
 			; z = v[n-1];
 			LDA !n : DEC : ASL #2 : TAX
 			LDA !v, X : STA !z
-			LDA !v+2, X : STA !z+2
+			LDA !v+$000002, X : STA !z+$000002
 			
 			; y = v[0] -= MX;
 			JSR CryptoMX
 			LDA !v : !SUB !MXResult : STA !v : STA !y
-			LDA !v+2 : SBC !MXResult+2 : STA !v+2 : STA !y+2
+			LDA !v+$000002 : SBC !MXResult+$000002 : STA !v+$000002 : STA !y+$000002
 			
 			; sum -= DELTA;
 			LDA !sum : !SUB CryptoDelta : STA !sum
-			LDA !sum+2 : !SUB CryptoDelta+2 : STA !sum+2
+			LDA !sum+$000002 : !SUB CryptoDelta+$000002 : STA !sum+$000002
 			
 		LDA !rounds : BEQ + : BRL --- : + ; } while (--rounds);
 	PLP
@@ -198,27 +198,27 @@ RTL
 
 .multiply
            LDA     #$00
-           STA     !upperScratch+4   ;Clear upper half of
-           STA     !upperScratch+5   ;!upperScratchuct
-           STA     !upperScratch+6
-           STA     !upperScratch+7
+           STA     !upperScratch+$000004   ;Clear upper half of
+           STA     !upperScratch+$000005   ;!upperScratchuct
+           STA     !upperScratch+$000006
+           STA     !upperScratch+$000007
            LDX     #$20     ;Set binary count to 32
 .shift_r
-           LSR     !dpScratch+3   ;Shift multiplyer right
-           ROR     !dpScratch+2
-           ROR     !dpScratch+1
+           LSR     !dpScratch+$0003   ;Shift multiplyer right
+           ROR     !dpScratch+$0002
+           ROR     !dpScratch+$0001
            ROR     !dpScratch
            BCC     .rotate_r ;Go rotate right if c = 0
-           LDA     !upperScratch+4    ;Get upper half of !upperScratchuct
+           LDA     !upperScratch+$000004    ;Get upper half of !upperScratchuct
            !ADD    !rounds   ; and add multiplicand to it
-           STA     !upperScratch+4
-           LDA     !upperScratch+5
+           STA     !upperScratch+$000004
+           LDA     !upperScratch+$000005
            ADC.w   #$00
-           STA     !upperScratch+5
-           LDA     !upperScratch+6
+           STA     !upperScratch+$000005
+           LDA     !upperScratch+$000006
            ADC.w   #$00
-           STA     !upperScratch+6
-           LDA     !upperScratch+7
+           STA     !upperScratch+$000006
+           LDA     !upperScratch+$000007
            ADC.w   #$00
 .rotate_r
            ROR     a        ;Rotate partial !upperScratchuct
