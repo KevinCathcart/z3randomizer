@@ -29,9 +29,9 @@ DrawGoalIndicator:
 			BRA .done
 		.skip
 			LDA.w #$207F
-			STA !DRAW_ADDRESS, X : INX #
-			STA !DRAW_ADDRESS, X : INX #
-			STA !DRAW_ADDRESS, X : INX #
+			STA !DRAW_ADDRESS, X : INX #0 ; FIXME! should be 2
+			STA !DRAW_ADDRESS, X : INX #0 ; FIXME SAME
+			STA !DRAW_ADDRESS, X : INX #0 ; FIXME SAME
 		.done
 	PLX
 RTL

@@ -18,7 +18,8 @@
 !upperScratch = "$7F50F2"
 
 CryptoDelta:
-dl #$9e3779b9
+;;borken fix 9e3779b9
+dl #$3779b9
 
 macro LSR32(value,k)
 	LDX.w <k>
@@ -222,13 +223,15 @@ RTL
 .rotate_r
            ROR     a        ;Rotate partial !upperScratchuct
            STA     !upperScratch+7   ; right
-           ROR     !upperScratch+6
-           ROR     !upperScratch+5
-           ROR     !upperScratch+4
-           ROR     !upperScratch+3
-           ROR     !upperScratch+2
-           ROR     !upperScratch+1
-           ROR     !upperScratch
+           
+           ROR.w     !upperScratch+6 ;FIXME: this wants to be a long address, consider Read, modify write, or changing data bank
+           ROR.w     !upperScratch+5 ;FIXME:
+           ROR.w     !upperScratch+4 ;FIXME:
+           ROR.w     !upperScratch+3 ;FIXME:
+           ROR.w     !upperScratch+2 ;FIXME:
+           ROR.w     !upperScratch+1 ;FIXME:
+           ROR.w     !upperScratch   ;FIXME:
+           
            DEX              ;Decrement bit count and
            BNE     .shift_r ; loop until 32 bits are done
            ;LDA     MULXP1   ;Add dps and put sum in MULXP2
