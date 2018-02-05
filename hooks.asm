@@ -346,7 +346,7 @@ dl $080116, $070116; <- E97E
 ;org $06C9BC ; <- 349BC - sprite_ponds.asm : 1066
 ;org $06C9C0 ; <- 349C0 - sprite_ponds.asm : 1068
 org $06C926 ; <- 34926 - sprite_ponds.asm : 945
-JMP.l GetFairySword
+JML.l GetFairySword
 NOP #12
 org $06C936 ; <- 34936 - sprite_ponds.asm : 952
 PyramidFairy_BRANCH_IOTA:
@@ -364,7 +364,7 @@ org $068A14 ; <- 30A14 - sprite_prep.asm : 716
 NOP #8 ; fix bomb shop spawn for dwarfless big bomb
 ;--------------------------------------------------------------------------------
 org $06B489 ; <- 33489 - sprite_smithy_bros.asm : 473 (LDA $7EF359 : CMP.b #$03 : BCS .tempered_sword_or_better)
-JMP.l GetSmithSword
+JML.l GetSmithSword
 NOP #4
 Smithy_DoesntHaveSword:
 org $06B49D ; <- 3349D - sprite_smithy_bros.asm : 485 (.tempered_sword_or_better)
@@ -421,7 +421,7 @@ org $07B57B ; <- 3B57B - Bank07.asm : 8523 (BMI .cantOpen)
 NOP #2
 ;--------------------------------------------------------------------------------
 org $00D531 ; 5531 - Bank00.asm:3451 (LDY.b #$5D)
-JMP.l GetAnimatedSpriteGfxFile
+JML.l GetAnimatedSpriteGfxFile
 
 org $00D547 ; 5547 - Bank00.asm:3467 (JSR Decomp_spr_high)
 GetAnimatedSpriteGfxFile_return:
@@ -489,7 +489,7 @@ org $09895C ; 4895C - ancilla_init.asm:1344 (LDA PotionList, X)
 LDA.w PotionListExpanded, X
 ;--------------------------------------------------------------------------------
 org $098A36 ; <- 48A36 - ancilla_init.asm:1432 (LDA AddReceiveItem.item_graphics_indices, Y : STA $72)
-LDA AddReceivedItemExpanded_item_graphics_indices, Y
+LDA.w AddReceivedItemExpanded_item_graphics_indices, Y
 ;--------------------------------------------------------------------------------
 org $06D1EB ; 351EB - sprite_absorbable.asm:364 (STA $7EF375) ; bugbug commented out until i figure out why it doesn't work
 JSL HandleBombAbsorbtion
@@ -778,10 +778,10 @@ org $079A0E ; 39A0E - Bank07.asm : 4117 - JSL HUD.RefreshIconLong
 JSL.l Link_ReceiveItem_HUDRefresh
 ;--------------------------------------------------------------------------------
 org $08C6F9 ; 446F9 - ancilla_receive_item.asm : 538 - (LDA AddReceiveItem.properties, X : BPL .valid_upper_properties)
-LDA AddReceivedItemExpanded_properties, X
+LDA.l AddReceivedItemExpanded_properties, X
 ;--------------------------------------------------------------------------------
 org $08C70F ; 4470F - ancilla_receive_item.asm : 550 - (LDA .wide_item_flag, X : STA ($92), Y ; AddReceiveItem.wide_item_flag? ; LDA.b #$00 : STA ($92), Y in the japanese version)
-JMP.l LoadNarrowObject
+JML.l LoadNarrowObject
 NOP
 LoadNarrowObjectReturn:
 ;--------------------------------------------------------------------------------
@@ -1331,10 +1331,10 @@ org $05ED10 ; <- 2ED10 - sprite_zelda.asm : 233 - (LDA.b #$19 : STA $012C)
 NOP #5
 ;--------------------------------------------------------------------------------
 org $1ECE47 ; <- F4E47 - sprite_crystal_maiden.asm : 220
-JMP.l MaidenCrystalScript
+JML MaidenCrystalScript
 ;--------------------------------------------------------------------------------
 org $1ECCEB ; <- F4CEB - sprite_crystal_maiden.asm : 25 ; skip all palette nonsense
-JMP.l SkipCrystalPalette
+JML SkipCrystalPalette
 org $1ECD39
 SkipCrystalPalette:
 ;--------------------------------------------------------------------------------
@@ -1734,7 +1734,7 @@ org $06B048 ; <- 33048
 JSL.l ItemCheck_TreeKid3
 
 org $06AF59 ; <- 32F59 - sprite_flute_boy.asm : 36 (LDA $0D80, X : CMP.b #$03 : BEQ .invisible)
-JMP.l FluteBoy
+JML FluteBoy
 FluteBoy_Abort:
 RTS
 FluteBoy_Continue:
