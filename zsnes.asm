@@ -97,9 +97,10 @@ JML.l ReturnCheckZSNES
 STP ; !
 ;--------------------------------------------------------------------------------
 org $378000
-
 ZSNES_Tiles:
-    incbin zsnes_tiles.bin
+    incbin zsnes_tiles.bin:0-8000
+org $388000
+    incbin zsnes_tiles.bin:8000-0
     
 ZSNES_TileMap:
     incbin zsnes_tilemap.bin
