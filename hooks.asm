@@ -468,7 +468,7 @@ LDA.w AddReceivedItemExpanded_x_offsets, Y
 
 org $08C6C8 ; 446C8 - ancilla_receive_item.asm:538 (LDA AddReceiveItem.properties, X)
 LDA.l AddReceivedItemExpanded_properties, X
-org $00C6F9 ; 446F9 - ancilla_receive_item.asm:570 (LDA AddReceiveItem.properties, X)
+org $08C6F9 ; 446F9 - ancilla_receive_item.asm:570 (LDA AddReceiveItem.properties, X)
 LDA.l AddReceivedItemExpanded_properties, X
 
 org $08C6DE ; 446DE - ancilla_receive_item.asm:550 (LDA .wide_item_flag, X)
@@ -777,10 +777,11 @@ _Bank07_5726:
 org $079A0E ; 39A0E - Bank07.asm : 4117 - JSL HUD.RefreshIconLong
 JSL.l Link_ReceiveItem_HUDRefresh
 ;--------------------------------------------------------------------------------
-org $08C6F9 ; 446F9 - ancilla_receive_item.asm : 538 - (LDA AddReceiveItem.properties, X : BPL .valid_upper_properties)
-LDA.l AddReceivedItemExpanded_properties, X
+; (Hooked Above!)
+;org $08C6F9 ; 446F9 - ancilla_receive_item.asm : 538 - (LDA AddReceiveItem.properties, X : BPL .valid_upper_properties)
+;LDA.l AddReceivedItemExpanded_properties, X
 ;--------------------------------------------------------------------------------
-org $08C70F ; 4470F - ancilla_receive_item.asm : 550 - (LDA .wide_item_flag, X : STA ($92), Y ; AddReceiveItem.wide_item_flag? ; LDA.b #$00 : STA ($92), Y in the japanese version)
+org $08C70F ; 4470F - ancilla_receive_item.asm : 582 - (LDA.b #$00 : STA ($92), Y)
 JML.l LoadNarrowObject
 NOP
 LoadNarrowObjectReturn:

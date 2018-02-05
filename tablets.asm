@@ -93,7 +93,7 @@ IsMedallion:
 RTL
 ;--------------------------------------------------------------------------------
 LoadNarrowObject:
-	LDA AddReceivedItemExpanded_wide_item_flag, X : STA ($92), Y ; AddReceiveItem.wide_item_flag? ; LDA.b #$00 : STA ($92), Y in the japanese version
+	LDA AddReceivedItemExpanded_wide_item_flag, X : STA ($92), Y ; replacement for what we wrote over (get the flag insetad of always setting #00)
 	PLY
 	;JSL.l DrawNarrowDroppedObject
 JML.l LoadNarrowObjectReturn
